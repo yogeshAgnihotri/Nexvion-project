@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -32,29 +33,29 @@ pipeline {
                 sh 'docker tag ${APP_NAME}:${IMAGE_TAG} ${APP_NAME}:latest'
             }
         }
-    }
- 
+
         stage('Push to Docker Hub') {
-    steps {
-        withCredentials([usernamePassword(
-            credentialsId: 'dockerhub-credentials',
-            usernameVariable: 'DOCKERHUB_USER',
-            passwordVariable: 'DOCKERHUB_TOKEN'
-        )]) {
-            sh '''
-                set -e
-                echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-credentials',
+                    usernameVariable: 'DOCKERHUB_USER',
+                    passwordVariable: 'DOCKERHUB_TOKEN'
+                )]) {
+                    sh '''
+                        set -e
+                        echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
 
-                docker tag ${APP_NAME}:${IMAGE_TAG} "$DOCKERHUB_USER/${APP_NAME}:${IMAGE_TAG}"
-                docker tag ${APP_NAME}:latest "$DOCKERHUB_USER/${APP_NAME}:latest"
+                        docker tag ${APP_NAME}:${IMAGE_TAG} "$DOCKERHUB_USER/${APP_NAME}:${IMAGE_TAG}"
+                        docker tag ${APP_NAME}:latest "$DOCKERHUB_USER/${APP_NAME}:latest"
 
-                docker push "$DOCKERHUB_USER/${APP_NAME}:${IMAGE_TAG}"
-                docker push "$DOCKERHUB_USER/${APP_NAME}:latest"
+                        docker push "$DOCKERHUB_USER/${APP_NAME}:${IMAGE_TAG}"
+                        docker push "$DOCKERHUB_USER/${APP_NAME}:latest"
 
-                docker logout
-            '''
+                        docker logout
+                    '''
+                }
+            }
         }
     }
-}
 }
 

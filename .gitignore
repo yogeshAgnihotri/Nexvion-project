@@ -1,0 +1,15 @@
+# Terraform state and sensitive variable files
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/
+
+# Credentials and private keys
+*.pem
+*.key
+.env
+.env.*
+
+# Ansible sensitive files
+vault-password.txt
+ansible/inventory.ini

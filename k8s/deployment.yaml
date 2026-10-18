@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexvion
+  namespace: webapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nexvion
+  template:
+    metadata:
+      labels:
+        app: nexvion
+    spec:
+      containers:
+        - name: nexvion
+          image: yogesh2214/nexvion:1.0
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always

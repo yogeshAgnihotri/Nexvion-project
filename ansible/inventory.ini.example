@@ -1,0 +1,2 @@
+[kubernetes]
+KUBERNETES_PRIVATE_IP ansible_user=ubuntu ansible_ssh_private_key_file=/path/to/your-key.pem

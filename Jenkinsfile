@@ -57,5 +57,28 @@ pipeline {
             }
         }
     }
+             stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                    set -e
+
+                    scp -i /var/lib/jenkins/.ssh/kubernetes-key.pem \
+                        -o StrictHostKeyChecking=accept-new \
+                        k8s/deployment.yaml k8s/service.yaml \
+                        ubuntu@172.31.41.163:/tmp/
+
+                    ssh -i /var/lib/jenkins/.ssh/kubernetes-key.pem \
+                        -o StrictHostKeyChecking=accept-new \
+                        ubuntu@172.31.41.163 '
+                            kubectl apply -f /tmp/service.yaml
+                            kubectl apply -f /tmp/deployment.yaml
+                            kubectl rollout status deployment/nexvion \
+                                -n webapp --timeout=180s
+                            kubectl get pods -n webapp
+                        '
+                '''
+            }
+        }  
 }
+
 
